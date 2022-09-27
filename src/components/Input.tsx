@@ -1,10 +1,6 @@
-import { Input as NativeBaseInput, IInputProps } from "native-base";
+import { Input as NativeBaseInput, IInputProps } from 'native-base';
 
-type Props = IInputProps &{
-  placeHolderText: string,
-}
-
-export function Input({ placeHolderText, ...rest } : Props) {
+export function Input({ ...rest }: IInputProps) {
   return (
     <NativeBaseInput
       bg="gray.700"
@@ -15,13 +11,12 @@ export function Input({ placeHolderText, ...rest } : Props) {
       fontFamily="body"
       color="white"
       placeholderTextColor="gray.300"
-      placeholder={placeHolderText}
       _focus={{
         borderWidth: 1,
         borderColor: "green.500",
         bg: "gray.700"
       }}
-      mb={4}
+      {...rest}
     />
   );
 }
