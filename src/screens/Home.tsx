@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   HStack,
   IconButton,
@@ -20,9 +21,25 @@ export function Home() {
   const [statusSelected, setStatusSelected] = useState<"open" | "closed">(
     "open"
   );
-  const [orders, setOrders] = useState<OrderProps[]>([]);
-  const { colors } = useTheme();
+  const [orders, setOrders] = useState<OrderProps[]>([
+    {
+      id: '123',
+      patrimony: '132456',
+      when: '14/05/2001 as 10:35',
+      status: 'open',
+    },
+  ]);
 
+  const { colors } = useTheme();
+  const navigation = useNavigation();
+
+  function handleNewOrder() {
+    navigation.navigate("new");
+  }
+
+  function handleOpenDatails(orderId: string) {
+      navigation.navigate('details', { orderId })
+  }
   return (
     <VStack flex={1} pb={6} bg="gray.700">
       <HStack
@@ -80,10 +97,10 @@ export function Home() {
           contentContainerStyle={{ paddingBottom: 100 }}
           data={orders}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <Order data={item} />}
+          renderItem={({ item }) => <Order data={item} onPress={() => handleOpenDatails(item.id)}/>}
         />
 
-        <Button title="Nova solicitação" />
+        <Button title="Nova solicitação" onPress={handleNewOrder} />
       </VStack>
     </VStack>
   );
