@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   HStack,
   IconButton,
@@ -6,13 +6,21 @@ import {
   useTheme,
   Text,
   Heading,
+  FlatList,
+  Center,
 } from "native-base";
-import { SignOut } from "phosphor-react-native";
+import { SignOut, ChatTeardropText } from "phosphor-react-native";
 
 import { Filter } from "../components/Filter";
+import { Button } from "../components/Button";
+import { Order, OrderProps } from "../components/Order";
 import Logo from "../assets/logo_secondary.svg";
 
 export function Home() {
+  const [statusSelected, setStatusSelected] = useState<"open" | "closed">(
+    "open"
+  );
+  const [orders, setOrders] = useState<OrderProps[]>([]);
   const { colors } = useTheme();
 
   return (
@@ -43,10 +51,39 @@ export function Home() {
           <Text color="gray.200">3</Text>
         </HStack>
 
-        <HStack>
-          <Filter type="open" title="em andamento" />
-          <Filter type="closed" title="finalizados" />
+        <HStack space={3} mb={8}>
+          <Filter
+            type="open"
+            title="em andamento"
+            onPress={() => setStatusSelected("open")}
+            isActive={statusSelected === "open"}
+          />
+          <Filter
+            type="closed"
+            title="finalizados"
+            onPress={() => setStatusSelected("closed")}
+            isActive={statusSelected === "closed"}
+          />
         </HStack>
+
+        <FlatList
+          ListEmptyComponent={() => (
+            <Center>
+              <ChatTeardropText color={colors.gray[300]} size={40} />
+              <Text color="gray.300" fontSize="xl" mt={6} textAlign="center">
+                Você ainda não possui {"\n"} solicitações{" "}
+                {statusSelected === "open" ? "em andamento" : "finalizadas"}
+              </Text>
+            </Center>
+          )}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 100 }}
+          data={orders}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <Order data={item} />}
+        />
+
+        <Button title="Nova solicitação" />
       </VStack>
     </VStack>
   );
